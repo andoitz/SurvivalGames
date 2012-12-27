@@ -169,161 +169,167 @@
 /*     */ 
 /*     */   public void signShowMessage(String[] msg9, long wait)
 /*     */   {
-/* 192 */     this.runningThread += 1;
+/*     */     try
+/*     */     {
+/* 193 */       this.runningThread += 1;
 /*     */ 
-/* 194 */     this.messagequeue.add(msg9);
-/* 195 */     if (this.showingMessage)
-/* 196 */       return;
-/* 197 */     this.showingMessage = true;
-/* 198 */     if (this.tid != 0) {
-/* 199 */       Bukkit.getScheduler().cancelTask(this.tid);
-/*     */     }
-/*     */ 
-/* 239 */     clearSigns();
-/*     */ 
-/* 241 */     for (int c = 0; c < this.messagequeue.size(); c++) {
-/* 242 */       String[] msg = (String[])this.messagequeue.get(c);
-/* 243 */       int x = getSignMidPoint()[1] - msg.length / 2;
-/* 244 */       int lineno = x % 3;
-/* 245 */       x /= 4;
-/* 246 */       for (int a = msg.length - 1; a > -1; a--) {
-/* 247 */         int y = getSignMidPoint()[0] - msg[a].length() / 2;
-/*     */ 
-/* 250 */         char[] line = msg[a].toCharArray();
-/* 251 */         for (int b = 0; b < line.length; b++)
-/*     */         {
-/* 254 */           Sign sig = this.signs[x][(y / 16)];
-/* 255 */           sig.setLine(lineno, sig.getLine(lineno) + line[b]);
-/*     */ 
-/* 257 */           this.signs[x][(y / 16)].update();
-/*     */ 
-/* 259 */           y++;
-/*     */         }
-/* 261 */         if (lineno == 0) {
-/* 262 */           lineno = 3;
-/* 263 */           x++;
-/*     */         }
-/*     */         else {
-/* 266 */           lineno--;
-/*     */         }
+/* 195 */       this.messagequeue.add(msg9);
+/* 196 */       if (this.showingMessage)
+/* 197 */         return;
+/* 198 */       this.showingMessage = true;
+/* 199 */       if (this.tid != 0) {
+/* 200 */         Bukkit.getScheduler().cancelTask(this.tid);
 /*     */       }
 /*     */ 
-/*     */     }
+/* 240 */       clearSigns();
 /*     */ 
-/* 272 */     this.tid = Bukkit.getScheduler().scheduleSyncDelayedTask(this.p, new Runnable() {
-/*     */       public void run() {
-/* 274 */         Bukkit.getScheduler().scheduleSyncRepeatingTask(LobbyManager.this.p, new LobbyManager.LobbySignUpdater(LobbyManager.this), 1L, 20L);
-/* 275 */         LobbyManager.this.clearSigns();
+/* 242 */       for (int c = 0; c < this.messagequeue.size(); c++) {
+/* 243 */         String[] msg = (String[])this.messagequeue.get(c);
+/* 244 */         int x = getSignMidPoint()[1] - msg.length / 2;
+/* 245 */         int lineno = x % 3;
+/* 246 */         x /= 4;
+/* 247 */         for (int a = msg.length - 1; a > -1; a--) {
+/* 248 */           int y = getSignMidPoint()[0] - msg[a].length() / 2;
+/*     */ 
+/* 251 */           char[] line = msg[a].toCharArray();
+/* 252 */           for (int b = 0; b < line.length; b++)
+/*     */           {
+/* 255 */             Sign sig = this.signs[x][(y / 16)];
+/* 256 */             sig.setLine(lineno, sig.getLine(lineno) + line[b]);
+/*     */ 
+/* 258 */             this.signs[x][(y / 16)].update();
+/*     */ 
+/* 260 */             y++;
+/*     */           }
+/* 262 */           if (lineno == 0) {
+/* 263 */             lineno = 3;
+/* 264 */             x++;
+/*     */           }
+/*     */           else {
+/* 267 */             lineno--;
+/*     */           }
+/*     */         }
+/*     */ 
 /*     */       }
+/*     */ 
+/* 273 */       this.tid = Bukkit.getScheduler().scheduleSyncDelayedTask(this.p, new Runnable() {
+/*     */         public void run() {
+/* 275 */           Bukkit.getScheduler().scheduleSyncRepeatingTask(LobbyManager.this.p, new LobbyManager.LobbySignUpdater(LobbyManager.this), 1L, 20L);
+/* 276 */           LobbyManager.this.clearSigns();
+/*     */         }
+/*     */       }
+/*     */       , 100L);
+/*     */ 
+/* 283 */       this.messagequeue.clear();
+/*     */ 
+/* 285 */       this.showingMessage = false;
 /*     */     }
-/*     */     , 100L);
-/*     */ 
-/* 282 */     this.messagequeue.clear();
-/*     */ 
-/* 284 */     this.showingMessage = false;
+/*     */     catch (Exception localException)
+/*     */     {
+/*     */     }
 /*     */   }
 /*     */ 
 /*     */   public void updateGameStatus()
 /*     */   {
-/* 307 */     int b = this.signs.length - 1;
-/* 308 */     if (!SurvivalGames.config_todate) {
-/* 309 */       this.signs[b][0].setLine(0, ChatColor.RED + "CONFIG");
-/* 310 */       this.signs[b][0].setLine(1, ChatColor.RED + "OUTDATED!");
-/* 311 */       this.signs[b][1].setLine(0, ChatColor.RED + "Please reset");
-/* 312 */       this.signs[b][1].setLine(1, ChatColor.RED + "your config");
-/* 313 */       this.signs[b][0].update();
-/* 314 */       this.signs[b][1].update();
-/* 315 */       return;
+/* 310 */     int b = this.signs.length - 1;
+/* 311 */     if (!SurvivalGames.config_todate) {
+/* 312 */       this.signs[b][0].setLine(0, ChatColor.RED + "CONFIG");
+/* 313 */       this.signs[b][0].setLine(1, ChatColor.RED + "OUTDATED!");
+/* 314 */       this.signs[b][1].setLine(0, ChatColor.RED + "Please reset");
+/* 315 */       this.signs[b][1].setLine(1, ChatColor.RED + "your config");
+/* 316 */       this.signs[b][0].update();
+/* 317 */       this.signs[b][1].update();
+/* 318 */       return;
 /*     */     }
-/* 317 */     if (!SurvivalGames.dbcon) {
-/* 318 */       this.signs[b][0].setLine(0, ChatColor.RED + "No Database");
-/* 319 */       this.signs[b][0].update();
-/* 320 */       return;
+/* 320 */     if (!SurvivalGames.dbcon) {
+/* 321 */       this.signs[b][0].setLine(0, ChatColor.RED + "No Database");
+/* 322 */       this.signs[b][0].update();
+/* 323 */       return;
 /*     */     }
-/* 322 */     if (GameManager.getInstance().getGameCount() == 0) {
-/* 323 */       this.signs[b][0].setLine(1, ChatColor.RED + "No Arenas");
-/* 324 */       this.signs[b][0].update();
-/* 325 */       return;
+/* 325 */     if (GameManager.getInstance().getGameCount() == 0) {
+/* 326 */       this.signs[b][0].setLine(1, ChatColor.RED + "No Arenas");
+/* 327 */       this.signs[b][0].update();
+/* 328 */       return;
 /*     */     }
 /*     */     try {
-/* 328 */       SettingsManager.getInstance().getLobbySpawn();
+/* 331 */       SettingsManager.getInstance().getLobbySpawn();
 /*     */     }
 /*     */     catch (Exception e) {
-/* 331 */       this.signs[b][0].setLine(1, ChatColor.RED + "No Lobby spawn!");
-/* 332 */       this.signs[b][0].update();
-/* 333 */       return;
+/* 334 */       this.signs[b][0].setLine(1, ChatColor.RED + "No Lobby spawn!");
+/* 335 */       this.signs[b][0].update();
+/* 336 */       return;
 /*     */     }
-/* 335 */     if (this.error) {
-/* 336 */       this.signs[b][0].setLine(1, ChatColor.RED + "Error");
-/* 337 */       this.signs[b][0].update();
-/* 338 */       return;
+/* 338 */     if (this.error) {
+/* 339 */       this.signs[b][0].setLine(1, ChatColor.RED + "Error");
+/* 340 */       this.signs[b][0].update();
+/* 341 */       return;
 /*     */     }
 /*     */ 
-/* 341 */     ArrayList games = GameManager.getInstance().getGames();
+/* 344 */     ArrayList games = GameManager.getInstance().getGames();
 /*     */ 
-/* 343 */     for (int a = 0; a < games.size(); a++)
+/* 346 */     for (int a = 0; a < games.size(); a++)
 /*     */       try {
-/* 345 */         Game game = (Game)games.get(a);
+/* 348 */         Game game = (Game)games.get(a);
 /*     */ 
-/* 347 */         this.signs[b][0].setLine(0, "[SurvivalGames]");
-/* 348 */         this.signs[b][0].setLine(1, "Click to join");
-/* 349 */         this.signs[b][0].setLine(2, "Arena " + game.getID());
-/* 350 */         this.signs[b][1].setLine(0, "Arena " + game.getID());
-/* 351 */         this.signs[b][1].setLine(1, game.getMode());
-/* 352 */         this.signs[b][1].setLine(2, game.getActivePlayers() + 
-/* 353 */           "/" + ChatColor.GRAY + game.getInactivePlayers() + ChatColor.BLACK + 
-/* 354 */           "/" + SettingsManager.getInstance().getSpawnCount(game.getID()));
-/* 355 */         if (game.getMode() == Game.GameMode.STARTING) {
-/* 356 */           this.signs[b][1].setLine(3, game.getCountdownTime());
-/* 357 */         } else if ((game.getMode() == Game.GameMode.RESETING) || (game.getGameMode() == Game.GameMode.FINISHING)) {
-/* 358 */           this.signs[b][2].setLine(3, game.getRBStatus());
-/* 359 */           if (game.getRBPercent() > 100.0D) {
-/* 360 */             this.signs[b][a].setLine(1, "Saving Queue");
-/* 361 */             this.signs[b][1].setLine(3, (int)game.getRBPercent() + " left");
+/* 350 */         this.signs[b][0].setLine(0, "[SurvivalGames]");
+/* 351 */         this.signs[b][0].setLine(1, "Click to join");
+/* 352 */         this.signs[b][0].setLine(2, "Arena " + game.getID());
+/* 353 */         this.signs[b][1].setLine(0, "Arena " + game.getID());
+/* 354 */         this.signs[b][1].setLine(1, game.getMode());
+/* 355 */         this.signs[b][1].setLine(2, game.getActivePlayers() + 
+/* 356 */           "/" + ChatColor.GRAY + game.getInactivePlayers() + ChatColor.BLACK + 
+/* 357 */           "/" + SettingsManager.getInstance().getSpawnCount(game.getID()));
+/* 358 */         if (game.getMode() == Game.GameMode.STARTING) {
+/* 359 */           this.signs[b][1].setLine(3, game.getCountdownTime());
+/* 360 */         } else if ((game.getMode() == Game.GameMode.RESETING) || (game.getGameMode() == Game.GameMode.FINISHING)) {
+/* 361 */           this.signs[b][2].setLine(3, game.getRBStatus());
+/* 362 */           if (game.getRBPercent() > 100.0D) {
+/* 363 */             this.signs[b][a].setLine(1, "Saving Queue");
+/* 364 */             this.signs[b][1].setLine(3, (int)game.getRBPercent() + " left");
 /*     */           }
 /*     */           else
 /*     */           {
-/* 365 */             this.signs[b][1].setLine(3, (int)game.getRBPercent() + "%");
+/* 368 */             this.signs[b][1].setLine(3, (int)game.getRBPercent() + "%");
 /*     */           }
 /*     */         } else {
-/* 368 */           this.signs[b][1].setLine(3, "");
-/* 369 */         }this.signs[b][0].update();
-/* 370 */         this.signs[b][1].update();
-/* 371 */         this.signs[b][2].update();
+/* 371 */           this.signs[b][1].setLine(3, "");
+/* 372 */         }this.signs[b][0].update();
+/* 373 */         this.signs[b][1].update();
+/* 374 */         this.signs[b][2].update();
 /*     */ 
-/* 373 */         int signno = 2;
-/* 374 */         int line = 0;
-/* 375 */         Player[] active = game.getPlayers()[0];
-/* 376 */         Player[] inactive = game.getPlayers()[1];
-/* 377 */         for (Player p : active) {
-/* 378 */           if (signno < this.signs[b].length)
+/* 376 */         int signno = 2;
+/* 377 */         int line = 0;
+/* 378 */         Player[] active = game.getPlayers()[0];
+/* 379 */         Player[] inactive = game.getPlayers()[1];
+/* 380 */         for (Player p : active) {
+/* 381 */           if (signno < this.signs[b].length)
 /*     */           {
-/* 380 */             this.signs[b][signno].setLine(line, (SurvivalGames.auth.contains(p.getName()) ? ChatColor.DARK_BLUE : ChatColor.BLACK) + (p.getName().equalsIgnoreCase("Double0negative") ? "Double0" : p.getName()));
-/* 381 */             this.signs[b][signno].update();
+/* 383 */             this.signs[b][signno].setLine(line, (SurvivalGames.auth.contains(p.getName()) ? ChatColor.DARK_BLUE : ChatColor.BLACK) + (p.getName().equalsIgnoreCase("Double0negative") ? "Double0" : p.getName()));
+/* 384 */             this.signs[b][signno].update();
 /*     */ 
-/* 383 */             line++;
-/* 384 */             if (line == 4) {
-/* 385 */               line = 0;
-/* 386 */               signno++;
+/* 386 */             line++;
+/* 387 */             if (line == 4) {
+/* 388 */               line = 0;
+/* 389 */               signno++;
 /*     */             }
 /*     */           }
 /*     */         }
-/* 390 */         for (Player p : inactive) {
-/* 391 */           if (signno < this.signs[b].length) {
-/* 392 */             this.signs[b][signno].setLine(line, (SurvivalGames.auth.contains(p.getName()) ? ChatColor.DARK_RED : ChatColor.GRAY) + (p.getName().equalsIgnoreCase("Double0negative") ? "Double0" : p.getName()));
-/* 393 */             this.signs[b][signno].update();
-/* 394 */             line++;
-/* 395 */             if (line == 4) {
-/* 396 */               line = 0;
-/* 397 */               signno++;
+/* 393 */         for (Player p : inactive) {
+/* 394 */           if (signno < this.signs[b].length) {
+/* 395 */             this.signs[b][signno].setLine(line, (SurvivalGames.auth.contains(p.getName()) ? ChatColor.DARK_RED : ChatColor.GRAY) + (p.getName().equalsIgnoreCase("Double0negative") ? "Double0" : p.getName()));
+/* 396 */             this.signs[b][signno].update();
+/* 397 */             line++;
+/* 398 */             if (line == 4) {
+/* 399 */               line = 0;
+/* 400 */               signno++;
 /*     */             }
 /*     */ 
 /*     */           }
 /*     */ 
 /*     */         }
 /*     */ 
-/* 404 */         b--; } catch (Exception e) {
-/* 405 */         e.printStackTrace(); this.signs[0][0].setLine(1, ChatColor.RED + "ERROR"); this.signs[0][0].setLine(1, ChatColor.RED + "Check Console");
+/* 407 */         b--; } catch (Exception e) {
+/* 408 */         e.printStackTrace(); this.signs[0][0].setLine(1, ChatColor.RED + "ERROR"); this.signs[0][0].setLine(1, ChatColor.RED + "Check Console");
 /*     */       }
 /*     */   }
 /*     */ 
@@ -331,14 +337,14 @@
 /*     */   {
 /*     */     try
 /*     */     {
-/* 414 */       for (int y = this.signs.length - 1; y != -1; y--)
-/* 415 */         for (int a = 0; a < 4; a++)
+/* 417 */       for (int y = this.signs.length - 1; y != -1; y--)
+/* 418 */         for (int a = 0; a < 4; a++)
 /*     */         {
-/* 417 */           for (int x = 0; x != this.signs[0].length; x++)
+/* 420 */           for (int x = 0; x != this.signs[0].length; x++)
 /*     */           {
-/* 419 */             Sign sig = this.signs[y][x];
-/* 420 */             sig.setLine(a, "");
-/* 421 */             sig.update();
+/* 422 */             Sign sig = this.signs[y][x];
+/* 423 */             sig.setLine(a, "");
+/* 424 */             sig.update();
 /*     */           }
 /*     */         }
 /*     */     }
@@ -348,7 +354,7 @@
 /*     */   }
 /*     */ 
 /*     */   public void error(boolean e) {
-/* 431 */     this.error = e;
+/* 434 */     this.error = e;
 /*     */   }
 /*     */ 
 /*     */   class LobbySignUpdater
@@ -360,7 +366,7 @@
 /*     */ 
 /*     */     public void run()
 /*     */     {
-/* 294 */       LobbyManager.this.updateGameStatus();
+/* 297 */       LobbyManager.this.updateGameStatus();
 /*     */     }
 /*     */   }
 /*     */ 
@@ -379,7 +385,7 @@
 /*     */   }
 /*     */ }
 
-/* Location:           C:\Users\SUPERCOMPUTER\Desktop\SGAMESCONFIG1\SurvivalGames_B_0.4.10 (1)\SurvivalGames B 0.4.10\jd-gui-0.3.5.windows\SurvivalGames\
+/* Location:           C:\Users\SUPERCOMPUTER\Desktop\SGAMESCONFIG1\SurvivalGames_B_0.4.10 (1)\SurvivalGames B 0.4.10\jd-gui-0.3.5.windows\SurvivalGames (2)\
  * Qualified Name:     com.skitscape.survivalgames.LobbyManager
  * JD-Core Version:    0.6.2
  */

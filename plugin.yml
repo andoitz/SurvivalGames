@@ -1,6 +1,6 @@
 name: SurvivalGames
 main: com.skitscape.survivalgames.SurvivalGames
-version: B 0.4.10
+version: B 0.4.11
 
 commands:
   survivalgames:
